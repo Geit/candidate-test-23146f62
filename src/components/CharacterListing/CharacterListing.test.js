@@ -102,7 +102,7 @@ describe("CharacterListing", () => {
             });
 
             const { findByText } = render(<CharacterListing />);
-            
+
             expect(await findByText("Unable to retrieve character listing.")).toBeInTheDocument();
         });
     });

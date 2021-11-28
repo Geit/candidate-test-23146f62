@@ -2,10 +2,12 @@ import React, { useContext } from "react";
 import { CharacterListingContext, CharacterListingProvider } from "./CharacterListingContext";
 import { CharacterProfile } from "../CharacterProfile";
 
+import styles from "./CharacterListing.module.css";
+
 const CharacterList: React.FC = () => {
     const characterListing = useContext(CharacterListingContext);
 
-    if(characterListing.fetchError) {
+    if (characterListing.fetchError) {
         return <>Unable to retrieve character listing.</>;
     }
 
@@ -31,9 +33,28 @@ const CharacterList: React.FC = () => {
 
 const CharacterListingContainer = () => {
     return (
-        <CharacterListingProvider>
-            <CharacterList />
-        </CharacterListingProvider>
+        <section className={styles["characterList"]}>
+            <div className={styles["characterListControls"]}>
+                <div className={styles["characterListControls__combo"]}>
+                    <label htmlFor="characterListControls__category">Category</label>
+                    <select name="category" id="characterListControls__category">
+                        <option value="">All Categories</option>
+                        <option value="hobbit">Hobbit</option>
+                    </select>
+                </div>
+
+                <div className={styles["characterListControls__combo"]}>
+                    <label htmlFor="characterListControls__ordering">Order by</label>
+                    <select name="ordering" id="characterListControls__ordering">
+                        <option value="alphabetical">Alphabetical</option>
+                        <option value="significance">Significance</option>
+                    </select>
+                </div>
+            </div>
+            <CharacterListingProvider>
+                <CharacterList />
+            </CharacterListingProvider>
+        </section>
     );
 };
 

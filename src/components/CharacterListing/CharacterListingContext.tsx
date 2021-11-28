@@ -1,14 +1,13 @@
 import React, { createContext, useEffect, useState } from "react";
 import { Character } from "../../types";
 
-
 interface CharacterContextContents {
     fetchError?: unknown;
     characters: Character[] | null;
 }
 
 const defaultContextState: CharacterContextContents = {
-    characters: null
+    characters: null,
 };
 
 export const CharacterListingContext = createContext<CharacterContextContents>(defaultContextState);
@@ -20,18 +19,19 @@ const fetchCharacterData = async (
         const response = await fetch(`/characters.json`);
         const characters: Character[] = await response.json();
         setCharacterData({
-            characters
+            characters,
         });
     } catch (e) {
         setCharacterData({
             characters: null,
-            fetchError: e
+            fetchError: e,
         });
     }
 };
 
 export const CharacterListingProvider: React.FC = ({ children }) => {
-    const [characterData, setCharacterData] = useState<CharacterContextContents>(defaultContextState);
+    const [characterData, setCharacterData] =
+        useState<CharacterContextContents>(defaultContextState);
 
     useEffect(() => {
         fetchCharacterData(setCharacterData);

@@ -1,0 +1,22 @@
+
+.characterListControls {
+    background: white;
+    margin: 2rem;
+    padding: 1rem;
+    display: flex;
+
+    &__combo {
+        min-width: 8rem;
+        margin-right: 2rem;
+        text-align: left;
+
+        & select, & label {
+            width: 100%;
+            display: block;
+        }
+
+        & label {
+            margin-bottom: .25rem;
+        }
+    }
+}
