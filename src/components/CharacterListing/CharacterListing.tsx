@@ -1,8 +1,5 @@
 import React, { useContext } from "react";
-import {
-    CharacterListingContext,
-    CharacterListingProvider,
-} from "./CharacterListingContext";
+import { CharacterListingContext, CharacterListingProvider } from "./CharacterListingContext";
 import { CharacterProfile } from "../CharacterProfile";
 
 const CharacterList: React.FC = () => {

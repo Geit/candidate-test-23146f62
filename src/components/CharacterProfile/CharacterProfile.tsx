@@ -16,15 +16,9 @@ const CharacterProfile: React.FC<CharacterProfileProps> = ({ character }) => {
                 className={styles["characterProfile__portrait"]}
             />
             <article className={styles["characterProfile__textDetails"]}>
-                <h2 className={styles["characterProfile__name"]}>
-                    {character.name}
-                </h2>
-                <p className={styles["characterProfile__category"]}>
-                    {character.category}
-                </p>
-                <p className={styles["characterProfile__description"]}>
-                    {character.description}
-                </p>
+                <h2 className={styles["characterProfile__name"]}>{character.name}</h2>
+                <p className={styles["characterProfile__category"]}>{character.category}</p>
+                <p className={styles["characterProfile__description"]}>{character.description}</p>
             </article>
         </section>
     );

@@ -3,9 +3,7 @@ import { Character } from "../../types";
 
 const defaultCharacters = null;
 
-export const CharacterListingContext = createContext<Character[] | null>(
-    defaultCharacters
-);
+export const CharacterListingContext = createContext<Character[] | null>(defaultCharacters);
 
 const fetchCharacterData = async (
     setCharacterData: React.Dispatch<React.SetStateAction<Character[] | null>>
@@ -22,9 +20,7 @@ const fetchCharacterData = async (
 };
 
 export const CharacterListingProvider: React.FC = ({ children }) => {
-    const [characterData, setCharacterData] = useState<Character[] | null>(
-        null
-    );
+    const [characterData, setCharacterData] = useState<Character[] | null>(null);
 
     useEffect(() => {
         fetchCharacterData(setCharacterData);
