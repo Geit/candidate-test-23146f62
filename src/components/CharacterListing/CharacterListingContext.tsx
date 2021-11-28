@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Character } from "./types";
+import { Character } from "../../types";
 
 const defaultCharacters = null;
 

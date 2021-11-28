@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import styles from "./App.module.css";
 
-import { CharacterListingProvider } from "./CharacterListingContext";
-import CharacterListing from "./CharacterListing";
+import { CharacterListing } from "./components/CharacterListing";
 
 class App extends Component {
     render() {
@@ -17,9 +16,7 @@ class App extends Component {
                 </header>
 
                 <section className="App-content">
-                    <CharacterListingProvider>
-                        <CharacterListing />
-                    </CharacterListingProvider>
+                    <CharacterListing />
                 </section>
             </div>
         );

@@ -1,8 +1,11 @@
 import React, { useContext } from "react";
-import { CharacterListingContext } from "./CharacterListingContext";
-import { CharacterProfile } from "./components/CharacterProfile";
+import {
+    CharacterListingContext,
+    CharacterListingProvider,
+} from "./CharacterListingContext";
+import { CharacterProfile } from "../CharacterProfile";
 
-const CharacterListing: React.FC = () => {
+const CharacterList: React.FC = () => {
     const characterListing = useContext(CharacterListingContext);
 
     if (characterListing == null) {
@@ -25,4 +28,12 @@ const CharacterListing: React.FC = () => {
     );
 };
 
-export default CharacterListing;
+const CharacterListingContainer = () => {
+    return (
+        <CharacterListingProvider>
+            <CharacterList />
+        </CharacterListingProvider>
+    );
+};
+
+export default CharacterListingContainer;
