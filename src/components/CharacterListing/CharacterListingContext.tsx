@@ -1,10 +1,14 @@
 import React, { createContext, useEffect, useReducer, useState } from "react";
 import { Character } from "../../types";
 
+// @todo: This should be suffixed with a const assertion, but create-react-app
+// seems to very much not like that.
+export const availableOrderings = ["alphabetical", "significance"]; // as const;
+
 interface CharacterContextContents {
     fetchError?: unknown;
-    ordering: "alphabetical" | "significance";
-    categoryFilter: string | null;
+    ordering: typeof availableOrderings[number];
+    categoryFilter: string | "all";
     characters: Character[] | null;
     dispatchUpdate: React.Dispatch<CharacterContextActions>;
 }
@@ -17,7 +21,7 @@ type CharacterContextActions =
 
 const defaultContextState: CharacterContextContents = {
     characters: null,
-    categoryFilter: null,
+    categoryFilter: "all",
     ordering: "alphabetical",
     dispatchUpdate: () => {},
 };

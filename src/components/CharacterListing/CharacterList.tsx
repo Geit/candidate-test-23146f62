@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
-import { CharacterProfile } from '../CharacterProfile';
-import { CharacterListingContext } from './CharacterListingContext';
+import React, { useContext } from "react";
+import { CharacterProfile } from "../CharacterProfile";
+import { CharacterListingContext } from "./CharacterListingContext";
 
 export const CharacterList: React.FC = () => {
     const characterListing = useContext(CharacterListingContext);
