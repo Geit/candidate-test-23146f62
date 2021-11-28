@@ -33,9 +33,9 @@ const SimpleComboBox: React.FC<SimpleComboBoxProps> = ({
     return (
         <div className={styles["characterListControls__combo"]}>
             <label htmlFor={randomSelectId}>{name}</label>
-            <select name={name} id={randomSelectId} onChange={onSelectChanged}>
+            <select name={name} id={randomSelectId} onChange={onSelectChanged} value={selectedOption}>
                 {options.map((opt) => (
-                    <option value={opt.key} key={opt.key} selected={opt.key === selectedOption}>
+                    <option value={opt.key} key={opt.key}>
                         {opt.value}
                     </option>
                 ))}
@@ -52,12 +52,7 @@ const convertStringArrayIntoOptions = (str: string) => ({
 export const CharacterListingControls: React.FC = () => {
     const characterListing = useContext(CharacterListingContext);
 
-    const categoriesFromData = Array.from(
-        new Set(characterListing.characters?.map((char) => char.category) ?? [])
-    ).map(convertStringArrayIntoOptions);
-
-    const categoryOptions = [{ key: "all", value: "All Categories" }].concat(categoriesFromData);
-
+    const categoryOptions = characterListing.availableCategories.map(convertStringArrayIntoOptions);
     const orderingOptions = availableOrderings.map(convertStringArrayIntoOptions);
 
     return (

@@ -8,6 +8,7 @@ export const availableOrderings = ["alphabetical", "significance"]; // as const;
 interface CharacterContextContents {
     fetchError?: unknown;
     ordering: typeof availableOrderings[number];
+    availableCategories: string[];
     categoryFilter: string | "all";
     characters: Character[] | null;
     dispatchUpdate: React.Dispatch<CharacterContextActions>;
@@ -15,12 +16,17 @@ interface CharacterContextContents {
 
 type CharacterContextActions =
     | { type: "setOrdering"; data: CharacterContextContents["ordering"] }
-    | { type: "setCharacters"; data: CharacterContextContents["characters"] }
+    | {
+          type: "setCharacters";
+          characters: CharacterContextContents["characters"];
+          availableCategories: CharacterContextContents["availableCategories"];
+      }
     | { type: "setCategoryFilter"; data: CharacterContextContents["categoryFilter"] }
     | { type: "setFetchError"; data: CharacterContextContents["fetchError"] };
 
 const defaultContextState: CharacterContextContents = {
     characters: null,
+    availableCategories: [],
     categoryFilter: "all",
     ordering: "alphabetical",
     dispatchUpdate: () => {},
@@ -28,13 +34,33 @@ const defaultContextState: CharacterContextContents = {
 
 export const CharacterListingContext = createContext<CharacterContextContents>(defaultContextState);
 
-const fetchCharacterData = async (setCharacterData: React.Dispatch<CharacterContextActions>) => {
+const fetchCharacterData = async (
+    ordering: CharacterContextContents["ordering"],
+    categoryFilter: CharacterContextContents["categoryFilter"],
+    setCharacterData: React.Dispatch<CharacterContextActions>
+) => {
     try {
         const response = await fetch(`/characters.json`);
         const characters: Character[] = await response.json();
+
+        const filteredCharacters = characters.filter(
+            (character) =>
+                categoryFilter === "all" || character.category === categoryFilter
+        ).sort((a,b) => {
+            if(ordering === "alphabetical")
+                return a.name.localeCompare(b.name);
+            else
+                return a.significanceIndex - b.significanceIndex;
+        });
+
+        const categoriesFromData = ["all"].concat(
+            Array.from(new Set(characters.map((char) => char.category)))
+        );
+
         setCharacterData({
             type: "setCharacters",
-            data: characters,
+            characters: filteredCharacters,
+            availableCategories: categoriesFromData,
         });
     } catch (e) {
         setCharacterData({
@@ -53,7 +79,8 @@ const characterListingStateReducer = (
             return {
                 ...state,
                 fetchError: null,
-                characters: action.data,
+                characters: action.characters,
+                availableCategories: action.availableCategories,
             };
 
         case "setFetchError":
@@ -83,8 +110,8 @@ export const CharacterListingProvider: React.FC = ({ children }) => {
     const [state, dispatchUpdate] = useReducer(characterListingStateReducer, defaultContextState);
 
     useEffect(() => {
-        fetchCharacterData(dispatchUpdate);
-    }, []);
+        fetchCharacterData(state.ordering, state.categoryFilter, dispatchUpdate);
+    }, [state.ordering, state.categoryFilter, dispatchUpdate]);
 
     return (
         <CharacterListingContext.Provider
