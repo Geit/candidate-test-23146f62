@@ -33,7 +33,12 @@ const SimpleComboBox: React.FC<SimpleComboBoxProps> = ({
     return (
         <div className={styles["characterListControls__combo"]}>
             <label htmlFor={randomSelectId}>{name}</label>
-            <select name={name} id={randomSelectId} onChange={onSelectChanged} value={selectedOption}>
+            <select
+                name={name}
+                id={randomSelectId}
+                onChange={onSelectChanged}
+                value={selectedOption}
+            >
                 {options.map((opt) => (
                     <option value={opt.key} key={opt.key}>
                         {opt.value}

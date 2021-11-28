@@ -1,4 +1,11 @@
-import { render, within } from "@testing-library/react";
+import {
+    render,
+    within,
+    screen,
+    fireEvent,
+    waitForElementToBeRemoved,
+    waitFor,
+} from "@testing-library/react";
 import { CharacterListing } from "./index";
 
 const createFetchSuccessMock = (data) => {
@@ -19,6 +26,13 @@ const singleCharacterMock = [
 
 const multipleCharacterMock = [
     {
+        name: "Samwise Gamgee",
+        category: "hobbit",
+        description: "Frodo's gardener.",
+        significanceIndex: 1,
+        avatar: "samwise_gamgee.jpg",
+    },
+    {
         name: "Frodo Baggins",
         category: "hobbit",
         description: "The main character.",
@@ -29,15 +43,8 @@ const multipleCharacterMock = [
         name: "Gandalf the Grey",
         category: "wizard",
         description: "A wizarding wizard.",
-        significanceIndex: 1,
-        avatar: "gandalf_the_grey.jpg",
-    },
-    {
-        name: "Samwise Gamgee",
-        category: "hobbit",
-        description: "Frodo's gardener.",
         significanceIndex: 2,
-        avatar: "samwise_gamgee.jpg",
+        avatar: "gandalf_the_grey.jpg",
     },
 ];
 
@@ -108,15 +115,136 @@ describe("CharacterListing", () => {
     });
 
     describe("When filtering to a specific category", () => {
-        it.todo("should show entries from that category");
-        it.todo("should not show entries from any other category");
+        let matchingItemCountInMock = 0;
+        let itemsToBeRemoved = [];
+        let itemsRemaining = [];
+
+        beforeEach(async () => {
+            createFetchSuccessMock(multipleCharacterMock);
+
+            render(<CharacterListing />);
+
+            const categorySelect = await screen.findByLabelText("Category");
+
+            fireEvent.change(categorySelect, {
+                target: { value: multipleCharacterMock[0].category },
+            });
+
+            itemsRemaining = multipleCharacterMock.filter(
+                (char) => char.category == multipleCharacterMock[0].category
+            );
+            itemsToBeRemoved = multipleCharacterMock.filter(
+                (char) => char.category != multipleCharacterMock[0].category
+            );
+            matchingItemCountInMock = multipleCharacterMock.length - itemsToBeRemoved.length;
+
+            // We need to wait for the newly filtered items to actually be removed
+            // as changing the filter causes the request to be remade.
+            await waitForElementToBeRemoved(() => screen.queryByText(itemsToBeRemoved[0].name));
+        });
+
+        it("should show entries from that category", () => {
+            const items = screen.getAllByTestId("CharacterProfile");
+
+            expect(items).toHaveLength(matchingItemCountInMock);
+
+            for (let i = 0; i < itemsRemaining.length; i++) {
+                expect(screen.getByText(itemsRemaining[i].name)).toBeInTheDocument();
+            }
+        });
+
+        it("should not show entries from any other category", () => {
+            expect.assertions(itemsToBeRemoved.length);
+
+            for (let i = 0; i < itemsToBeRemoved.length; i++) {
+                expect(screen.queryByText(itemsToBeRemoved[i].name)).not.toBeInTheDocument();
+            }
+        });
     });
 
     describe("When ordering by alphabetical", () => {
-        it.todo("should show the characters in the appropriate order");
+        it("should show the characters in the appropriate order", async () => {
+            createFetchSuccessMock(multipleCharacterMock);
+
+            const { findAllByTestId } = render(<CharacterListing />);
+
+            await screen.findAllByTestId("CharacterProfile");
+
+            const orderingSelect = await screen.findByLabelText("Order by");
+
+            fireEvent.change(orderingSelect, { target: { value: "alphabetical" } });
+
+            // We need to wait for the results to become alphabetical
+            await waitFor(async () => {
+                const items = await findAllByTestId("CharacterProfile");
+
+                // This test won't work with 1 item.
+                expect(items.length).toBeGreaterThan(1);
+
+                for (let i = 0; i < items.length - 1; i++) {
+                    const elementA = items[i].querySelector("h2");
+                    const elementB = items[i + 1].querySelector("h2");
+                    expect(elementA).toBeInTheDocument();
+                    expect(elementB).toBeInTheDocument();
+                    expect(elementA.innerHTML.localeCompare(elementB.innerHTML)).toBeLessThan(0);
+                }
+            });
+
+            const items = await findAllByTestId("CharacterProfile");
+            const itemText = items.map((item) => item.querySelector("h2").innerHTML);
+            expect(itemText).toMatchInlineSnapshot(`
+                Array [
+                  "Frodo Baggins",
+                  "Gandalf the Grey",
+                  "Samwise Gamgee",
+                ]
+            `);
+        });
     });
 
     describe("When ordering by significance", () => {
-        it.todo("should show the characters in the appropriate order");
+        it("should show the characters in the appropriate order", async () => {
+            createFetchSuccessMock(multipleCharacterMock);
+
+            const { findAllByTestId } = render(<CharacterListing />);
+
+            await screen.findAllByTestId("CharacterProfile");
+
+            const orderingSelect = await screen.findByLabelText("Order by");
+
+            fireEvent.change(orderingSelect, { target: { value: "significance" } });
+
+            // We need to wait for the results to become non-alphabetical
+            await waitFor(async () => {
+                const items = await findAllByTestId("CharacterProfile");
+
+                // This test won't work with 1 item.
+                expect(items.length).toBeGreaterThan(1);
+
+                let outOfAlphabeticalOrder = false;
+
+                for (let i = 0; i < items.length - 1; i++) {
+                    const elementA = items[i].querySelector("h2");
+                    const elementB = items[i + 1].querySelector("h2");
+                    expect(elementA).toBeInTheDocument();
+                    expect(elementB).toBeInTheDocument();
+
+                    if (elementA.innerHTML.localeCompare(elementB.innerHTML) > 0)
+                        outOfAlphabeticalOrder = true;
+                }
+
+                expect(outOfAlphabeticalOrder).toBeTruthy();
+            });
+
+            const items = await findAllByTestId("CharacterProfile");
+            const itemText = items.map((item) => item.querySelector("h2").innerHTML);
+            expect(itemText).toMatchInlineSnapshot(`
+                Array [
+                  "Frodo Baggins",
+                  "Samwise Gamgee",
+                  "Gandalf the Grey",
+                ]
+            `);
+        });
     });
 });

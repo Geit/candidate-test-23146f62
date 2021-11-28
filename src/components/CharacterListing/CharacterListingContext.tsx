@@ -43,15 +43,14 @@ const fetchCharacterData = async (
         const response = await fetch(`/characters.json`);
         const characters: Character[] = await response.json();
 
-        const filteredCharacters = characters.filter(
-            (character) =>
-                categoryFilter === "all" || character.category === categoryFilter
-        ).sort((a,b) => {
-            if(ordering === "alphabetical")
-                return a.name.localeCompare(b.name);
-            else
-                return a.significanceIndex - b.significanceIndex;
-        });
+        const filteredCharacters = characters
+            .filter(
+                (character) => categoryFilter === "all" || character.category === categoryFilter
+            )
+            .sort((a, b) => {
+                if (ordering === "alphabetical") return a.name.localeCompare(b.name);
+                else return a.significanceIndex - b.significanceIndex;
+            });
 
         const categoriesFromData = ["all"].concat(
             Array.from(new Set(characters.map((char) => char.category)))
