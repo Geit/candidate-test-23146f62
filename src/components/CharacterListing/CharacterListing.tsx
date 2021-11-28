@@ -5,17 +5,21 @@ import { CharacterProfile } from "../CharacterProfile";
 const CharacterList: React.FC = () => {
     const characterListing = useContext(CharacterListingContext);
 
-    if (characterListing === null) {
+    if(characterListing.fetchError) {
+        return <>Unable to retrieve character listing.</>;
+    }
+
+    if (characterListing.characters === null) {
         return <>Loading</>;
     }
 
-    if (characterListing.length === 0) {
+    if (characterListing.characters.length === 0) {
         return <>No Characters found!</>;
     }
 
     return (
         <div>
-            {characterListing.map((character) => (
+            {characterListing.characters.map((character) => (
                 <CharacterProfile
                     key={`character-${character.significanceIndex}`}
                     character={character}

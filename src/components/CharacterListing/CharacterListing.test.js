@@ -46,12 +46,16 @@ describe("CharacterListing", () => {
         it("should render a loading state before the data fetch is complete", async () => {
             createFetchSuccessMock(singleCharacterMock);
 
-            const { getByText } = render(<CharacterListing />);
+            const { getByText, findAllByTestId } = render(<CharacterListing />);
 
             // Note: This works because getByText doesn't allow the promise within the mock to
             // resolve before we look at the render output. Using findBy* will cause the promise
             // to be resolved, and we will be in a "rendered with data" state.
             expect(getByText("Loading")).toBeInTheDocument();
+
+            // However, we do have to allow the Test Renderer to finish all async actions to avoid a warning.
+            const items = await findAllByTestId("CharacterProfile");
+            expect(items).toHaveLength(1);
         });
 
         it("should render a single character when that is all that is provided", async () => {
@@ -92,7 +96,7 @@ describe("CharacterListing", () => {
             expect(await findByText("No Characters found!")).toBeInTheDocument();
         });
 
-        it.skip("should render an error if the request fails", async () => {
+        it("should render an error if the request fails", async () => {
             jest.spyOn(global, "fetch").mockResolvedValue({
                 json: jest.fn().mockRejectedValue("Request failed"),
             });
