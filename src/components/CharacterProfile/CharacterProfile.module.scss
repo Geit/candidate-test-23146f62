@@ -1,0 +1,33 @@
+$breakpoint-mobile: 400px;
+
+.characterProfile {
+    display: flex;
+    background: white;
+    margin: 2rem;
+    padding: 1rem;
+
+    @media screen and (max-width: $breakpoint-mobile) {
+        display: block;
+    }
+
+    &__portrait {
+        flex-basis: content;
+        border-radius: 50%;
+        height: 6rem;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    &__textDetails {
+        text-align: left;
+        flex-grow: 1;
+    }
+
+    &__category {
+        text-transform: capitalize;
+    }
+
+    &__name {
+        margin-top: 0;
+    }
+}

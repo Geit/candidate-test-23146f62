@@ -1,0 +1,28 @@
+.characterProfile {
+  display: flex;
+  background: white;
+  margin: 2rem;
+  padding: 1rem;
+}
+@media screen and (max-width: 400px) {
+  .characterProfile {
+    display: block;
+  }
+}
+.characterProfile__portrait {
+  flex-basis: content;
+  border-radius: 50%;
+  height: 6rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+.characterProfile__textDetails {
+  text-align: left;
+  flex-grow: 1;
+}
+.characterProfile__category {
+  text-transform: capitalize;
+}
+.characterProfile__name {
+  margin-top: 0;
+}
