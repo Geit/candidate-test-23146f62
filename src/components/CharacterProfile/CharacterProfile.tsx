@@ -9,7 +9,7 @@ interface CharacterProfileProps {
 
 const CharacterProfile: React.FC<CharacterProfileProps> = ({ character }) => {
     return (
-        <section className={styles["characterProfile"]}>
+        <section className={styles["characterProfile"]} data-testid="CharacterProfile">
             <img
                 src={`characters/${character.avatar}`}
                 alt={`A portrait of ${character.name}`}

@@ -5,7 +5,7 @@ import { CharacterProfile } from "../CharacterProfile";
 const CharacterList: React.FC = () => {
     const characterListing = useContext(CharacterListingContext);
 
-    if (characterListing == null) {
+    if (characterListing === null) {
         return <>Loading</>;
     }
 
