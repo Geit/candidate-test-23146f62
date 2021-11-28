@@ -8,6 +8,7 @@ $breakpoint-mobile: 400px;
 
     @media screen and (max-width: $breakpoint-mobile) {
         display: block;
+        margin: 2rem 0;
     }
 
     &__portrait {
