@@ -6,15 +6,15 @@ export const CharacterList: React.FC = () => {
     const characterListing = useContext(CharacterListingContext);
 
     if (characterListing.fetchError) {
-        return <>Unable to retrieve character listing.</>;
+        return <div>Unable to retrieve character listing.</div>;
     }
 
     if (characterListing.characters === null) {
-        return <>Loading</>;
+        return <div>Loading</div>;
     }
 
     if (characterListing.characters.length === 0) {
-        return <>No Characters found!</>;
+        return <div>No Characters found!</div>;
     }
 
     return (

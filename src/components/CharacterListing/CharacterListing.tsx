@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
-import { CharacterListingContext, CharacterListingProvider } from "./CharacterListingContext";
-import { CharacterProfile } from "../CharacterProfile";
+import React from "react";
+import { CharacterListingProvider } from "./CharacterListingContext";
 import { CharacterListingControls } from "./CharacterListingControls";
 import { CharacterList } from "./CharacterList";
 

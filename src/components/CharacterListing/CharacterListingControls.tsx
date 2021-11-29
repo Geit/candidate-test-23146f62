@@ -1,53 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
+
+import { SimpleComboBox } from "../SimpleComboBox";
 import { availableOrderings, CharacterListingContext } from "./CharacterListingContext";
 import styles from "./CharacterListingControls.module.css";
-
-interface SimpleComboBoxProps {
-    options: {
-        key: string;
-        value: string;
-    }[];
-    selectedOption: SimpleComboBoxProps["options"][number]["key"];
-    onSelectedOptionChange?: (key: SimpleComboBoxProps["options"][number]["key"]) => void;
-    className: string;
-    name: string;
-}
-
-const SimpleComboBox: React.FC<SimpleComboBoxProps> = ({
-    className,
-    name,
-    options,
-    selectedOption,
-    onSelectedOptionChange,
-}) => {
-    // Just using a simple random string for the ID to make sure the label is
-    // appropriately connected to the select element.
-    const [randomSelectId] = useState((Math.random() + 1).toString(36).substring(7));
-
-    const onSelectChanged: React.ChangeEventHandler<HTMLSelectElement> = (evt) => {
-        if (onSelectedOptionChange) {
-            onSelectedOptionChange(evt.currentTarget.value);
-        }
-    };
-
-    return (
-        <div className={styles["characterListControls__combo"]}>
-            <label htmlFor={randomSelectId}>{name}</label>
-            <select
-                name={name}
-                id={randomSelectId}
-                onChange={onSelectChanged}
-                value={selectedOption}
-            >
-                {options.map((opt) => (
-                    <option value={opt.key} key={opt.key}>
-                        {opt.value}
-                    </option>
-                ))}
-            </select>
-        </div>
-    );
-};
 
 const convertStringArrayIntoOptions = (str: string) => ({
     key: str,
